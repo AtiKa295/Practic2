@@ -1,17 +1,39 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import org.example.adapter.HashOrderSourceAdapter;
+import org.example.adapter.PipeOrderSourceAdapter;
+import org.example.model.Order;
+import org.example.report.FileReportPrinter;
+import org.example.report.IReportPrinter;
+import org.example.service.IDiscountPolicy;
+import org.example.service.IOrderService;
+import org.example.service.OrderService;
+import org.example.service.StepDiscountPolicy;
+import org.example.source.orderSource.IOrderSource;
+import org.example.source.rawDataSource.FileRawDataSource;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class Main {
     static void main() {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        IO.println(String.format("Hello and welcome!"));
+        List<IOrderSource> sources = List.of(
+                new PipeOrderSourceAdapter(new FileRawDataSource("discount_day.txt")),
+                new HashOrderSourceAdapter(new FileRawDataSource("discount_day_without_ext"))
+        );
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            IO.println("i = " + i);
+        List<Order> allOrders = new ArrayList<>();
+        for (IOrderSource source : sources) {
+            allOrders.addAll(source.getOrders());
         }
+
+        IDiscountPolicy discountPolicy = new StepDiscountPolicy(0.50, 0.05);
+        IOrderService orderService = new OrderService(10.0, discountPolicy);
+
+        Map<String, Double> totals = orderService.proccesOrders(allOrders);
+
+        IReportPrinter reportPrinter = new FileReportPrinter("result.txt");
+        reportPrinter.printReport(totals);
     }
 }
