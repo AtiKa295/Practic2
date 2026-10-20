@@ -8,6 +8,19 @@ public class Order {
     private final double weight;
 
     public Order(LocalDateTime orderTime, String companyName, double weight) {
+
+        if (orderTime == null) {
+            throw new IllegalArgumentException("Время не может быть пустым");
+        }
+
+        if (companyName == null || companyName.isBlank()) {
+            throw new IllegalArgumentException("Название компании не может быть пустым");
+        }
+
+        if (weight <= 0) {
+            throw new IllegalArgumentException("Вес заказа должен быть строго больше нуля");
+        }
+
         this.orderTime = orderTime;
         this.companyName = companyName;
         this.weight = weight;

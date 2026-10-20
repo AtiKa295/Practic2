@@ -6,7 +6,8 @@ Fossil - 362600.00
 Mosque - 662400.00
 Atomic - 250000.00
 Electricity - 73600.00
-Industrial - 176000.00
+Indust8rial - 88000.00
+Industrial - 88000.00
 Carryover - 593400.00
 Resident - 112200.00
 Ancillary - 600000.00
