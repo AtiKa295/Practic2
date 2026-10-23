@@ -24,8 +24,19 @@ public abstract class AbstractOrderSourceAdapter implements IOrderSource {
         return rawLines.stream()
                 .filter(line -> line != null && !line.isBlank())
                 .map(String::trim)
-                .map(this::parseLine)
+                .map(this::safeParseLine)
                 .toList();
+    }
+
+
+    private Order safeParseLine(String line) {
+        try {
+            return parseLine(line);
+        } catch (OrderParseException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new OrderParseException("Ошибка получения строки: " + line + " причина: " + e.getMessage(), e);
+        }
     }
 
     protected abstract Order parseLine(String line);

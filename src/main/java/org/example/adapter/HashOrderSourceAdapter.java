@@ -14,6 +14,11 @@ public class HashOrderSourceAdapter extends AbstractOrderSourceAdapter{
     @Override
     protected Order parseLine(String line) {
         String[] parts = line.split("#");
+
+        if (parts.length != 3) {
+            throw new OrderParseException("Ожидалось 3 поля через #, получено: " + parts.length + " в строке" + line);
+        }
+
         LocalDateTime time = LocalDateTime.parse((parts[0].trim()));
         String company = parts[1].trim();
         double amount = Double.parseDouble(parts[2].trim());
