@@ -63,5 +63,43 @@ public class AdapterParsingTest {
         assertThrows(OrderParseException.class, adapter::getOrders);
     }
 
+    @Test
+    void shouldThrowWhenDateInvalidCalendarDate() {
+        IRawDataSource rawDataSource = () -> List.of("2021-02-30T16:00:22|Industrial|8800");
+        PipeOrderSourceAdapter adapter = new PipeOrderSourceAdapter(rawDataSource);
 
+        assertThrows(OrderParseException.class, adapter::getOrders);
+    }
+
+    @Test
+    void shouldThrowWhenTimeHasInvalidHours() {
+        IRawDataSource rawDataSource = () -> List.of("2021-02-09T25:00:22|Industrial|8800");
+        PipeOrderSourceAdapter adapter = new PipeOrderSourceAdapter(rawDataSource);
+
+        assertThrows(OrderParseException.class, adapter::getOrders);
+    }
+
+    @Test
+    void shouldThrowWhenExtraDelimitersPresent() {
+        IRawDataSource rawDataSource = () -> List.of("2021-02-09T16:00:22|Industrial|8800|extra");
+        PipeOrderSourceAdapter adapter = new PipeOrderSourceAdapter(rawDataSource);
+
+        assertThrows(OrderParseException.class, adapter::getOrders);
+    }
+
+    @Test
+    void shouldThrowWhenFieldIsEmpty() {
+        IRawDataSource rawDataSource = () -> List.of("2021-02-30T16:00:22||8800");
+        PipeOrderSourceAdapter adapter = new PipeOrderSourceAdapter(rawDataSource);
+
+        assertThrows(OrderParseException.class, adapter::getOrders);
+    }
+
+    @Test
+    void shouldThrowsWhenWeightIsNaN() {
+        IRawDataSource rawDataSource = () -> List.of("2021-02-09T16:00:22|Industrial|8800|NaN");
+        PipeOrderSourceAdapter adapter = new PipeOrderSourceAdapter(rawDataSource);
+
+        assertThrows(OrderParseException.class, adapter::getOrders);
+    }
 }

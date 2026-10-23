@@ -43,4 +43,14 @@ public class OrderTest {
         assertThrows(IllegalArgumentException.class, () -> new Order(time, "Industrial", 0));
         assertThrows(IllegalArgumentException.class, () -> new Order(time, "Industrial", -200));
     }
+
+    @Test
+    void shouldThrowWhenWeightIsNunOrInfinite() {
+        LocalDateTime now = LocalDateTime.now();
+
+        assertThrows(IllegalArgumentException.class, () -> new Order(now, "Industrial", Double.NaN));
+        assertThrows(IllegalArgumentException.class, () -> new Order(now, "Industrial", Double.POSITIVE_INFINITY));
+        assertThrows(IllegalArgumentException.class, () -> new Order(now, "Industrial", Double.NEGATIVE_INFINITY));
+    }
+
 }

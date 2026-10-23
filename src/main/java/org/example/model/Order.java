@@ -17,7 +17,7 @@ public class Order {
             throw new IllegalArgumentException("Название компании не может быть пустым");
         }
 
-        if (weight <= 0) {
+        if (!Double.isFinite(weight) || weight <= 0) {
             throw new IllegalArgumentException("Вес заказа должен быть строго больше нуля");
         }
 

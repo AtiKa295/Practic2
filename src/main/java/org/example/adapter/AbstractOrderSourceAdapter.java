@@ -35,7 +35,7 @@ public abstract class AbstractOrderSourceAdapter implements IOrderSource {
         } catch (OrderParseException e) {
             throw e;
         } catch (Exception e) {
-            throw new OrderParseException("Ошибка получения строки: " + line + " причина: " + e.getMessage());
+            throw new OrderParseException("Ошибка получения строки: " + line + " причина: " + e.getMessage(), e);
         }
     }
 
